@@ -1,0 +1,228 @@
+{
+  "activity": [
+    {
+      "created_by": "virtual.agent",
+      "created_on": "2026-06-15 12:22:59",
+      "note": "An agent can better assist you with this task. I'm unassigning myself from the task for an agent to pick it up.",
+      "sys_id": "6c47b5b82be18390db13f4f84391bf5b",
+      "type": "work_note"
+    },
+    {
+      "created_by": "virtual.agent",
+      "created_on": "2026-06-15 12:22:59",
+      "field": "assigned_to",
+      "new_value": "",
+      "old_value": "Virtual Agent",
+      "sys_id": "e447b5b82be18390db13f4f84391bf5a",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:24:57",
+      "note": "Acknowledged the incident. Attempted to reproduce the issue and successfully triggered the 500 error when exporting a dataset with over 15,000 rows. Extracted the application logs (attached OOM_StackTrace.png) which clearly show an OutOfMemoryError originating from PdfGeneratorService. Reassigning to the Backend Development team for further analysis of the memory consumption.",
+      "sys_id": "25b7f9302b258390db13f4f84391bf25",
+      "type": "work_note"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:25:16",
+      "field": "assigned_to",
+      "new_value": "Shankhanil Ghosh",
+      "old_value": "",
+      "sys_id": "c2c7f9702b258390db13f4f84391bffe",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Shankhanil.Ghosh",
+      "created_on": "2026-06-15 12:27:52",
+      "note": "Reviewed the attached stack trace and pulled a heap dump from the affected pod. The PDF library is trying to load the entire dataset into memory simultaneously before writing to the stream, causing the heap space to max out at the current 2GB limit. We have a backlog item to rewrite this using a streaming approach. In the meantime, the temporary workaround is to increase the heap allocation. Reassigning back to L1 Support to apply the infrastructure change.",
+      "sys_id": "1068b5782b258390db13f4f84391bfd9",
+      "type": "work_note"
+    },
+    {
+      "created_by": "Shankhanil.Ghosh",
+      "created_on": "2026-06-15 12:29:06",
+      "field": "assigned_to",
+      "new_value": "Sudhanshu Singh",
+      "old_value": "Shankhanil Ghosh",
+      "sys_id": "1ea8b9bc2b258390db13f4f84391bfe3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:30:37",
+      "note": "Received the configuration instructions. Updated JAVA_OPTS on prod-pdf-srv-01 and prod-pdf-srv-02 to increase the maximum heap size (-Xmx4G). Restarted the PDF generation pods. Proceeding to test.",
+      "sys_id": "2809f9b02b658390db13f4f84391bfa7",
+      "type": "work_note"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:30:50",
+      "note": "Tested the PDF export with a 25,000-row dataset. The report generated successfully in 14 seconds without crashing the service. Memory utilization stabilized at around 60%.",
+      "sys_id": "f709b1742b658390db13f4f84391bf72",
+      "type": "work_note"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:31:56",
+      "note": "The \"500 Internal Server Error\" during report exports was caused by a java.lang.OutOfMemoryError within the PDF generation module when processing large datasets. A temporary workaround was applied by increasing the JVM heap size allocation on the production application servers from 2GB to 4GB. Post-implementation testing confirmed that large reports are now generating successfully.",
+      "sys_id": "bf493db42b658390db13f4f84391bf8f",
+      "type": "work_note"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "incident_state",
+      "new_value": "6",
+      "old_value": "2",
+      "sys_id": "e689bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "close_code",
+      "new_value": "Solved (Work Around)",
+      "old_value": "",
+      "sys_id": "e289bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "state",
+      "new_value": "6",
+      "old_value": "2",
+      "sys_id": "ae89bdf82b658390db13f4f84391bff2",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "close_notes",
+      "new_value": "increased jvm heap size.  permanent code fix to introduce memory-efficient streaming for PDFs is scheduled for a future development sprint.",
+      "old_value": "",
+      "sys_id": "a689bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "resolved_at",
+      "new_value": "2026-06-15 19:32:56",
+      "old_value": "",
+      "sys_id": "a289bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "calendar_duration",
+      "new_value": "1970-01-01 00:18:12",
+      "old_value": "",
+      "sys_id": "6689bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "calendar_stc",
+      "new_value": "1092",
+      "old_value": "",
+      "sys_id": "6289bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "business_stc",
+      "new_value": "1092",
+      "old_value": "",
+      "sys_id": "2689bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "resolved_by",
+      "new_value": "Aditya Ganguly",
+      "old_value": "",
+      "sys_id": "2289bdf82b658390db13f4f84391bff3",
+      "type": "field_change"
+    },
+    {
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 12:32:56",
+      "field": "business_duration",
+      "new_value": "1970-01-01 00:18:12",
+      "old_value": "",
+      "sys_id": "ee89bdf82b658390db13f4f84391bff2",
+      "type": "field_change"
+    },
+    {
+      "content_type": "image/png",
+      "created_by": "Aditya.Ganguly",
+      "created_on": "2026-06-15 19:24:33",
+      "file_name": "OOM_StackTrace.png",
+      "size": null,
+      "sys_id": "e397b5fc2be18390db13f4f84391bfd3",
+      "type": "attachment"
+    }
+  ],
+  "analysis": {
+    "audit_summary": "The incident was initially assigned to the Virtual Agent, which subsequently unassigned itself. Aditya Ganguly then assigned it to Shankhanil Ghosh. Shankhanil Ghosh reassigned it to Sudhanshu Singh (though the work to increase heap was performed by Aditya Ganguly). The incident state transitioned from 'Active' to 'Resolved' by Aditya Ganguly. At resolution, the 'close_code' was set to 'Solved (Work Around)', the 'close_notes' were populated, and the 'resolved_at' and 'resolved_by' fields were updated.",
+    "image_analysis": "The attached image displays Java application logs indicating a critical error during a PDF export operation.\n\n**Key Observations:**\n\n1.  **Error Type:** The primary error is a `java.lang.OutOfMemoryError: Java heap space`. This means the Java Virtual Machine (JVM) ran out of allocated memory in the heap segment while attempting to execute a task.\n2.  **Context/Operation:** The error occurred during a \"PDF export\" process, as indicated by the log message `500 Internal Server Error during PDF export`.\n3.  **Application Component:** The error originated in the `c.e.a.c.ReportController` (likely `com.enterprise.app.controllers.ReportController`), specifically within its `exportToPdf` method.\n4.  **Stack Trace Analysis:**\n    *   The `OutOfMemoryError` occurred while attempting to grow a `java.util.ArrayList` (seen in `ArrayList.grow` and `Arrays.copyOf`).\n    *   This memory allocation failure directly happened within the `com.thirdparty.pdfbox.pdmodel.PDDocument.addPage` method. This strongly suggests that the PDF generation library (`pdfbox`) was attempting to add a page to a PDF document but required more memory than available for its internal data structures.\n    *   The application's `PdfGeneratorService` (`buildTablePages`, `generateReport`) and `ReportController` (`exportToPdf`) are actively involved in this call chain, confirming the PDF generation flow.\n5.  **Impact:** The client received a `500 Internal Server Error`, indicating that the server could not fulfill the request due to an unexpected condition.\n6.  **Environment Clue:** The log entry `[http-nio-8080-exec-4]` indicates this error occurred on a worker thread handling an HTTP request, likely from a web server like Apache Tomcat.\n7.  **Error Handling:** A subsequent `[WARN]` log entry from `o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver` indicates that the `OutOfMemoryError` was caught and \"resolved\" by the application's exception handling mechanism (likely Spring Framework), preventing a complete application crash but still resulting in a failed operation for the user.\n\n**Conclusion:** The application is running out of heap memory when generating a PDF, particularly when adding content (likely tables) to the PDF document via the `pdfbox` library. This could be due to generating very large or complex reports, processing excessive data, or insufficient JVM heap memory configuration.",
+    "journals_summary": "The incident was initially acknowledged by Aditya Ganguly who successfully reproduced the '500 Internal Server Error' when attempting to export large PDF reports (over 15,000 rows). Application logs confirmed a 'java.lang.OutOfMemoryError' originating from the PdfGeneratorService.\n\nThe incident was then escalated to Shankhanil Ghosh (Backend Development team), who reviewed the attached stack trace and a heap dump. The analysis revealed that the PDF library was attempting to load the entire dataset into memory, exceeding the current 2GB JVM heap limit. A temporary workaround to increase the heap allocation was recommended, with a permanent code fix for memory-efficient streaming scheduled for future development.\n\nAditya Ganguly subsequently applied the recommended configuration change, increasing the JVM heap size (-Xmx) from 2GB to 4GB on 'prod-pdf-srv-01' and 'prod-pdf-srv-02' and restarting the PDF generation pods. Post-implementation testing with a 25,000-row dataset confirmed successful report generation within 14 seconds, with memory utilization stabilizing at approximately 60%. The incident was then marked as Resolved.",
+    "raw_response": "```json\n{\n  \"journals_summary\": \"The incident was initially acknowledged by Aditya Ganguly who successfully reproduced the '500 Internal Server Error' when attempting to export large PDF reports (over 15,000 rows). Application logs confirmed a 'java.lang.OutOfMemoryError' originating from the PdfGeneratorService.\\n\\nThe incident was then escalated to Shankhanil Ghosh (Backend Development team), who reviewed the attached stack trace and a heap dump. The analysis revealed that the PDF library was attempting to load the entire dataset into memory, exceeding the current 2GB JVM heap limit. A temporary workaround to increase the heap allocation was recommended, with a permanent code fix for memory-efficient streaming scheduled for future development.\\n\\nAditya Ganguly subsequently applied the recommended configuration change, increasing the JVM heap size (-Xmx) from 2GB to 4GB on 'prod-pdf-srv-01' and 'prod-pdf-srv-02' and restarting the PDF generation pods. Post-implementation testing with a 25,000-row dataset confirmed successful report generation within 14 seconds, with memory utilization stabilizing at approximately 60%. The incident was then marked as Resolved.\",\n  \"audit_summary\": \"The incident was initially assigned to the Virtual Agent, which subsequently unassigned itself. Aditya Ganguly then assigned it to Shankhanil Ghosh. Shankhanil Ghosh reassigned it to Sudhanshu Singh (though the work to increase heap was performed by Aditya Ganguly). The incident state transitioned from 'Active' to 'Resolved' by Aditya Ganguly. At resolution, the 'close_code' was set to 'Solved (Work Around)', the 'close_notes' were populated, and the 'resolved_at' and 'resolved_by' fields were updated.\",\n  \"image_analysis\": \"The attached image displays Java application logs indicating a critical error during a PDF export operation.\\n\\n**Key Observations:**\\n\\n1.  **Error Type:** The primary error is a `java.lang.OutOfMemoryError: Java heap space`. This means the Java Virtual Machine (JVM) ran out of allocated memory in the heap segment while attempting to execute a task.\\n2.  **Context/Operation:** The error occurred during a \\\"PDF export\\\" process, as indicated by the log message `500 Internal Server Error during PDF export`.\\n3.  **Application Component:** The error originated in the `c.e.a.c.ReportController` (likely `com.enterprise.app.controllers.ReportController`), specifically within its `exportToPdf` method.\\n4.  **Stack Trace Analysis:**\\n    *   The `OutOfMemoryError` occurred while attempting to grow a `java.util.ArrayList` (seen in `ArrayList.grow` and `Arrays.copyOf`).\\n    *   This memory allocation failure directly happened within the `com.thirdparty.pdfbox.pdmodel.PDDocument.addPage` method. This strongly suggests that the PDF generation library (`pdfbox`) was attempting to add a page to a PDF document but required more memory than available for its internal data structures.\\n    *   The application's `PdfGeneratorService` (`buildTablePages`, `generateReport`) and `ReportController` (`exportToPdf`) are actively involved in this call chain, confirming the PDF generation flow.\\n5.  **Impact:** The client received a `500 Internal Server Error`, indicating that the server could not fulfill the request due to an unexpected condition.\\n6.  **Environment Clue:** The log entry `[http-nio-8080-exec-4]` indicates this error occurred on a worker thread handling an HTTP request, likely from a web server like Apache Tomcat.\\n7.  **Error Handling:** A subsequent `[WARN]` log entry from `o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver` indicates that the `OutOfMemoryError` was caught and \\\"resolved\\\" by the application's exception handling mechanism (likely Spring Framework), preventing a complete application crash but still resulting in a failed operation for the user.\\n\\n**Conclusion:** The application is running out of heap memory when generating a PDF, particularly when adding content (likely tables) to the PDF document via the `pdfbox` library. This could be due to generating very large or complex reports, processing excessive data, or insufficient JVM heap memory configuration.\",\n  \"recommended_resolution\": \"The '500 Internal Server Error' experienced during monthly transaction report PDF exports was identified as a `java.lang.OutOfMemoryError` within the application's PDF generation module. This occurred because the underlying PDF library was attempting to load the entire dataset into memory when processing large reports, exceeding the allocated JVM heap space.\\n\\nAs a temporary workaround, the maximum JVM heap size (`-Xmx`) on the production PDF generation application servers (prod-pdf-srv-01 and prod-pdf-srv-02) was increased from 2GB to 4GB. This change was applied via `JAVA_OPTS` and followed by a restart of the affected pods. Post-implementation testing confirmed that reports with larger datasets (e.g., 25,000 rows) now generate successfully without service interruption.\\n\\nA permanent solution involving a code fix to implement memory-efficient streaming for PDF generation is already scheduled for a future development sprint to address the root cause and optimize resource utilization.\"\n}\n```",
+    "recommended_resolution": "The '500 Internal Server Error' experienced during monthly transaction report PDF exports was identified as a `java.lang.OutOfMemoryError` within the application's PDF generation module. This occurred because the underlying PDF library was attempting to load the entire dataset into memory when processing large reports, exceeding the allocated JVM heap space.\n\nAs a temporary workaround, the maximum JVM heap size (`-Xmx`) on the production PDF generation application servers (prod-pdf-srv-01 and prod-pdf-srv-02) was increased from 2GB to 4GB. This change was applied via `JAVA_OPTS` and followed by a restart of the affected pods. Post-implementation testing confirmed that reports with larger datasets (e.g., 25,000 rows) now generate successfully without service interruption.\n\nA permanent solution involving a code fix to implement memory-efficient streaming for PDF generation is already scheduled for a future development sprint to address the root cause and optimize resource utilization."
+  },
+  "incident_details": {
+    "assigned_to": {
+      "display_value": "Sudhanshu Singh",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/sys_user/20470a1547d19a10e0d0961f016d43ae"
+    },
+    "assignment_group": {
+      "display_value": "ARE_TEAM",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/sys_user_group/48f128423bc8661011d8057aa5e45a39"
+    },
+    "business_service": "",
+    "caller_id": {
+      "display_value": "Sudhanshu Singh",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/sys_user/20470a1547d19a10e0d0961f016d43ae"
+    },
+    "category": "Software",
+    "close_code": "Solved (Work Around)",
+    "close_notes": "increased jvm heap size.  permanent code fix to introduce memory-efficient streaming for PDFs is scheduled for a future development sprint.",
+    "closed_at": "",
+    "closed_by": "",
+    "cmdb_ci": {
+      "display_value": "DHAC",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/cmdb_ci/6ba741743bc0ea5411d8057aa5e45a54"
+    },
+    "contact_type": "Email",
+    "description": "Users are reporting a \"500 Internal Server Error\" when attempting to export the monthly transaction reports to PDF. The issue appears to be affecting all users trying to generate large reports. The web interface crashes and displays the default 500 error page.",
+    "impact": "3 - Medium",
+    "is_resolved": true,
+    "number": "INC0023442",
+    "opened_at": "2026-06-15 12:14:44",
+    "opened_by": {
+      "display_value": "Aditya Ganguly",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/sys_user/9d27d8b54778a690e0d0961f016d43f8"
+    },
+    "priority": "(5)",
+    "resolution_notes": "increased jvm heap size.  permanent code fix to introduce memory-efficient streaming for PDFs is scheduled for a future development sprint.",
+    "resolved_at": "2026-06-15 12:32:56",
+    "resolved_by": {
+      "display_value": "Aditya Ganguly",
+      "link": "https://tataconsultancyservicesdemo5.service-now.com/api/now/table/sys_user/9d27d8b54778a690e0d0961f016d43f8"
+    },
+    "short_description": "500 Internal Server Error - OutOfMemoryException in PDF Generation Module",
+    "state": "Resolved",
+    "subcategory": "Application",
+    "sys_created_on": "2026-06-15 12:22:47",
+    "sys_id": "7b55b9fc2b618390db13f4f84391bf6a",
+    "urgency": "3 - Medium"
+  },
+  "incident_number": "INC0023442",
+  "is_resolved": true
+}
