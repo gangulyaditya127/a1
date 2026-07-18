@@ -1,0 +1,61 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+/**/.scannerwork
+
+# testing
+/coverage
+
+# production
+/build
+/dist
+/out
+/public/dist
+/are-quick-assesment-report-dist
+/v2
+/.scannerwork
+
+# environment variables
+# .env
+# .env*.local
+.env.local
+
+# local development server
+.vite/
+/temp
+
+# editor directories and files
+.idea
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.bak
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+
+changes.txt
+
+**/__pycache__/**
+
+# Development Purpose Only
+./activate_venv.bat

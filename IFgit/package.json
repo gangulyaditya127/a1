@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@sonar/scan": "^4.3.5",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.1"
+  },
+  "scripts": {
+    "sonar": "cross-env NO_PROXY=ismartams.tcsapps.com NODE_TLS_REJECT_UNAUTHORIZED=0 node scripts/sonnar-scan.cjs"
+  }
+}
