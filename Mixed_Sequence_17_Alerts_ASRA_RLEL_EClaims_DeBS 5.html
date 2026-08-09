@@ -1,0 +1,499 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mixed Sequence — 17 Alerts — ASRA/RLEL (Ben) + EClaims + DeBS</title>
+<style>
+ :root{--bg:#faf6f6;--border:#e6d5d5;--text:#2a1418;--dim:#7a5a5f;--red:#c8102e;--red-dark:#9c0b23;--red-tint:#fdecee;--amber:#d97706;--green:#0f7a4d;--blue:#1e40af}
+ *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;line-height:1.55;padding:24px;max-width:1250px;margin:0 auto}
+ header{border-bottom:3px solid var(--red);padding-bottom:14px;margin-bottom:14px}
+ .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--red);font-weight:700}
+ h1{font-size:23px;margin:4px 0 0;color:var(--red-dark)} h1 span{font-size:13px;color:var(--dim);font-weight:400;margin-left:8px}
+ h2{font-size:15px;text-transform:uppercase;letter-spacing:.05em;color:var(--red-dark);border-left:4px solid var(--red);padding-left:10px;margin:26px 0 12px}
+ h3{font-size:13px;color:var(--red-dark);margin:18px 0 8px}
+ .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+ .kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;box-shadow:0 2px 6px rgba(200,16,46,.05)}
+ .kpi .n{font-size:24px;font-weight:700} .kpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);font-weight:700;margin-top:4px}
+ .kpi.asra .n{color:var(--red-dark)} .kpi.rlel .n{color:var(--blue)} .kpi.ecl .n{color:var(--amber)} .kpi.debs .n{color:var(--green)} .kpi.tot .n{color:var(--red)}
+ table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:12px;margin-bottom:14px}
+ th{background:var(--red-tint);color:var(--red-dark);text-align:left;padding:8px 10px;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--red)}
+ td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle} tr:last-child td{border-bottom:none}
+ code{background:var(--red-tint);color:var(--red-dark);padding:1px 5px;border-radius:3px;font-family:Consolas,monospace;font-size:11px}
+ .intro{background:#fff;border:1px solid var(--border);border-left:4px solid var(--red);border-radius:8px;padding:12px 16px;font-size:12.5px;margin-bottom:8px}
+ .intro b{color:var(--red-dark)}
+ .pill{padding:1px 7px;border-radius:9px;font-size:9px;font-weight:700;text-transform:uppercase;color:#fff;white-space:nowrap}
+ .crit{background:var(--red)} .high{background:var(--amber)} .medium{background:var(--blue)} .low{background:var(--green)}
+ .tag{padding:1px 7px;border-radius:9px;font-size:9px;font-weight:700;text-transform:uppercase;color:#fff;white-space:nowrap}
+ .tag-asra{background:var(--red-dark)} .tag-rlel{background:var(--blue)} .tag-ecl{background:var(--amber)} .tag-debs{background:var(--green)} .tag-comp{background:var(--red)}
+ .seq{font-weight:700;color:var(--dim)}
+ .comp-row td{background:var(--red-tint)}
+ .esc-card{background:#fff8ee;border:1px solid var(--border);border-left:4px solid var(--amber);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+ .esc-card b{color:var(--red-dark)}
+ .demo-tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.05em;background:var(--green);color:#fff;padding:2px 8px;border-radius:9px;margin-left:8px;vertical-align:middle}
+ footer{margin-top:28px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--dim);text-align:center}
+
+ /* incident/correlation card */
+ .inc-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:16px;box-shadow:0 2px 6px rgba(200,16,46,.05)}
+ .inc-name{font-size:15px;font-weight:700;color:var(--red-dark);margin-bottom:4px}
+ .inc-id{font-family:Consolas,monospace;font-size:11px;color:var(--dim);margin-bottom:10px}
+ .corr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+ .corr-box{border-radius:8px;padding:10px 12px;font-size:12px}
+ .corr-box.h{background:#fff8ee;border:1px solid var(--border);border-left:4px solid var(--amber)}
+ .corr-box.v{background:#eef4ff;border:1px solid var(--border);border-left:4px solid var(--blue)}
+ .corr-box b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+ .corr-box.h b{color:var(--amber)} .corr-box.v b{color:var(--blue)}
+ .corr-chain{font-family:Consolas,monospace;font-size:11.5px;color:var(--text)}
+
+ /* tabs */
+ .tabbar{display:flex;gap:6px;margin:18px 0 4px;border-bottom:2px solid var(--border)}
+ .tabbtn{background:none;border:none;padding:10px 18px;font-size:13px;font-weight:700;color:var(--dim);cursor:pointer;border-bottom:3px solid transparent;letter-spacing:.02em;font-family:inherit}
+ .tabbtn:hover{color:var(--red-dark)}
+ .tabbtn.active{color:var(--red-dark);border-bottom:3px solid var(--red)}
+ .tabpanel{display:none;padding-top:10px}
+ .tabpanel.active{display:block}
+
+ /* KB / troubleshooting */
+ .kb-head{background:linear-gradient(135deg,var(--red-dark),var(--red));color:#fff;border-radius:10px;padding:16px 18px;margin-bottom:16px}
+ .kb-head .kbid{font-family:Consolas,monospace;font-size:11px;opacity:.85}
+ .kb-head h3{color:#fff;margin:4px 0 0;font-size:16px}
+ .action-card{background:#fff3f3;border:2px solid var(--red);border-radius:10px;padding:14px 16px;margin-bottom:16px}
+ .action-card .step{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+ .action-card .num{background:var(--red);color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+ .action-card .txt b{color:var(--red-dark)}
+ .ts-list{background:#fff;border:1px solid var(--border);border-radius:8px;padding:4px 0;margin-bottom:16px}
+ .ts-item{display:flex;gap:10px;padding:9px 16px;border-bottom:1px solid var(--border);font-size:12.5px}
+ .ts-item:last-child{border-bottom:none}
+ .ts-num{color:var(--red-dark);font-weight:700;flex-shrink:0;width:20px}
+
+ .p1-tag{display:inline-block;background:var(--red);color:#fff;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:9px;margin-left:6px}
+ .opt-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+ .opt-card{border-radius:10px;padding:14px 16px;border:2px solid var(--border)}
+ .opt-card.a{border-color:var(--red);background:#fff6f6}
+ .opt-card.b{border-color:var(--blue);background:#f4f8ff}
+ .opt-label{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;padding:3px 10px;border-radius:9px;margin-bottom:8px}
+ .opt-card.a .opt-label{background:var(--red)}
+ .opt-card.b .opt-label{background:var(--blue)}
+ .opt-card h4{margin:6px 0 6px;font-size:13px;color:var(--red-dark)}
+ .opt-card.b h4{color:var(--blue)}
+ .opt-card p{font-size:12px;margin:0 0 8px}
+ .opt-card .log-cite{font-size:11px;font-style:italic;color:var(--dim);background:#fff;border-radius:6px;padding:6px 9px;margin-bottom:8px;border:1px dashed var(--border)}
+ .opt-steps{font-size:12px;padding-left:0;list-style:none;margin:0;counter-reset:s}
+ .opt-steps li{padding:5px 0 5px 22px;position:relative;border-bottom:1px solid rgba(0,0,0,.06)}
+ .opt-steps li:last-child{border-bottom:none}
+ .opt-steps li::before{content:counter(s);counter-increment:s;position:absolute;left:0;top:5px;background:var(--red);color:#fff;width:16px;height:16px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ .opt-card.b .opt-steps li::before{background:var(--blue)}
+
+ /* historical incident RCA cards */
+ .hist-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:0;margin-bottom:20px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+ .hist-banner{background:linear-gradient(135deg,#2a1418,#3d1f24);color:#fff;padding:12px 16px}
+ .hist-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+ .hist-id{font-family:Consolas,monospace;font-weight:700;color:#fff;font-size:13px}
+ .hist-date{font-size:11px;color:#e0c8cc}
+ .hist-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:10.5px;color:#e0c8cc}
+ .hist-meta b{color:#fff}
+ .hist-body{padding:14px 16px}
+ .rca-section{margin-bottom:12px}
+ .rca-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--red-dark);margin-bottom:5px;display:flex;align-items:center;gap:6px}
+ .rca-label .ico{width:18px;height:18px;border-radius:5px;background:var(--red-tint);color:var(--red-dark);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+ .rca-text{font-size:12px;padding-left:24px}
+ .rca-steps{list-style:none;margin:0;padding-left:24px;counter-reset:rca}
+ .rca-steps li{position:relative;padding:4px 0 4px 20px;font-size:12px;counter-increment:rca}
+ .rca-steps li::before{content:counter(rca);position:absolute;left:0;top:5px;background:var(--dim);color:#fff;width:15px;height:15px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
+ .rca-steps.action li::before{background:var(--green)}
+ .rca-steps.invest li::before{background:var(--blue)}
+ .log-evidence{font-family:Consolas,monospace;font-size:10.5px;background:#1b0e10;color:#d8d0d0;border-radius:6px;padding:8px 10px;margin:6px 0 6px 24px}
+ .log-evidence .hl{color:#ffd166}
+ .mttr-strip{display:flex;gap:0;border-radius:8px;overflow:hidden;margin-top:10px}
+ .mttr-cell{flex:1;background:#f7f3f3;padding:8px 10px;text-align:center;border-right:1px solid var(--border)}
+ .mttr-cell:last-child{border-right:none}
+ .mttr-cell .v{font-size:14px;font-weight:700;color:var(--red-dark)}
+ .mttr-cell .l{font-size:9px;text-transform:uppercase;color:var(--dim);font-weight:700;margin-top:2px}
+ .variance-tag{display:inline-block;background:var(--green);color:#fff;font-size:9.5px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:9px;margin-left:6px}
+ .rc-tag-a{display:inline-block;background:var(--red);color:#fff;font-size:9.5px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:9px;margin-left:6px}
+ .rc-tag-b{display:inline-block;background:var(--blue);color:#fff;font-size:9.5px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:9px;margin-left:6px}
+ .rc-tag-none{display:inline-block;background:var(--dim);color:#fff;font-size:9.5px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:9px;margin-left:6px}
+ .rag-callout{background:#eef4ff;border:1px solid var(--blue);border-left:4px solid var(--blue);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12px}
+ .rag-callout b{color:var(--blue)}
+
+ /* logs */
+ .log-block{background:#fff;border:1px solid var(--border);border-radius:8px;margin-bottom:16px;overflow:hidden}
+ .log-head{background:#2a1418;color:#fff;padding:8px 14px;font-size:11.5px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+ .log-head .src{font-family:Consolas,monospace;font-weight:400;color:#f0b0b8;font-size:10.5px}
+ .log-body{background:#1b0e10;color:#d8d0d0;font-family:Consolas,Monaco,monospace;font-size:11px;padding:12px 16px;overflow-x:auto;line-height:1.7;white-space:pre}
+ .log-body .ts{color:#7fb2ff}
+ .log-body .lvl-crit{color:#ff6b6b;font-weight:700}
+ .log-body .lvl-warn{color:#ffb84d;font-weight:700}
+ .log-body .lvl-info{color:#7fd18c}
+ .log-body .hl{color:#ffd166;font-weight:700}
+</style></head><body>
+
+<header><div class="eyebrow">ARE Observability · Cross-Application Sample Alert Feed</div>
+<h1>Mixed Sequence — 17 Alerts — ASRA &amp; RLEL (Ben) + EClaims + DeBS <span>illustrative feed, in the exact PAGER79 309B / EClaims / DEBS alert nomenclature used across your extract</span></h1></header>
+
+<div class="intro">
+ <b>Purpose:</b> a single 17-alert, chronologically sequenced demo feed showing how a CICS ASRA/RLEL problem on
+ <b>Ben (Benefits)</b> cascades horizontally into an <b>EClaims</b> performance issue and a <b>DeBS</b> middleware
+ backlog, ending in one composite dependency-chain alert. All INC numbers use a dedicated <code>INC2195xxx</code>
+ demo block <span class="demo-tag">DEMO — no live data used</span>.
+</div>
+
+<div class="tabbar">
+ <button class="tabbtn active" onclick="showTab(0,this)">① Alert Sequence &amp; Suggested Incident</button>
+ <button class="tabbtn" onclick="showTab(1,this)">② Knowledge Article &amp; Troubleshooting</button>
+ <button class="tabbtn" onclick="showTab(2,this)">③ Sample Logs</button>
+</div>
+
+<!-- ============ TAB 1 ============ -->
+<div class="tabpanel active" id="tab0">
+
+<div class="inc-card">
+ <div class="inc-name">Suggested Incident: CICS CICSCN Region Degradation Triggered by VSAM Record-Lock Contention on Transactions TFIX/LK2D &mdash; Cascading to EClaims Response-Time SLA Breach and DeBS MESH Queue Backlog <span class="p1-tag">P1 &middot; MAJOR INCIDENT</span></div>
+ <div class="inc-id">Suggested Major Incident ID: <b>MIM2195020</b> &nbsp;|&nbsp; Linked Parent: <code>INC2195020</code> &nbsp;|&nbsp; Related KB: <code>KB0021950</code> &nbsp;|&nbsp; Priority: <b>P1</b> &nbsp;|&nbsp; Unique Symptom: <i>ASRA (0C7/0C4/0C9/0C1) on DEPR/KHI1/LK2D/R05P immediately followed by RLEL ENQUEUE/MQGET waits on TFIX/DEBP, then EClaims SAXParseException spike &gt;40/5min, then DeBS MESH depth &gt;4000 &mdash; this exact 4-application signature has not been seen together before</i></div>
+ <div class="corr-grid">
+  <div class="corr-box v">
+   <b>Vertical Correlation (within Ben / same application stack)</b>
+   <div class="corr-chain">ASRA abend cluster (transaction layer) → RLEL soft warning (resource layer) → RLEL hard abend (elapsed-time layer) → CICSCN region-down (region/infrastructure layer)</div>
+  </div>
+  <div class="corr-box h">
+   <b>Horizontal Correlation (across dependent applications)</b>
+   <div class="corr-chain">Benefits (Ben / CICSCN) → EClaims (Automation, downstream consumer) → DeBS (Data Entry Benefits System, further downstream)</div>
+  </div>
+ </div>
+</div>
+
+<div class="kpis">
+ <div class="kpi asra"><div class="n">4</div><div class="l">ASRA (Ben)</div></div>
+ <div class="kpi rlel"><div class="n">5</div><div class="l">RLEL (Ben)</div></div>
+ <div class="kpi ecl"><div class="n">4</div><div class="l">EClaims</div></div>
+ <div class="kpi debs"><div class="n">3</div><div class="l">DeBS</div></div>
+ <div class="kpi tot"><div class="n">17</div><div class="l">Total in sequence</div></div>
+</div>
+
+<h2>Full Sequence — 17 Alerts, 12-Minute Cascade Window</h2>
+<table><thead><tr><th>Seq</th><th>Time</th><th>Alert</th><th>Sev</th><th>Type</th><th>App</th><th>Title</th></tr></thead>
+<tbody>
+
+<tr><td class="seq">1</td><td>09:00:12</td><td>INC2195001</td><td><span class="pill medium">medium</span></td><td><span class="tag tag-asra">ASRA</span></td><td>Benefits</td><td>PAGER79 309B 79-501 _P3 DFHAP0001 CICSCN AN ABEND CODE 0C7/ASRA HAS OCCURRED IN TRANSACTION DEPR PROGRAM GH21DEPR01</td></tr>
+
+<tr><td class="seq">2</td><td>09:01:05</td><td>INC2195002</td><td><span class="pill medium">medium</span></td><td><span class="tag tag-asra">ASRA</span></td><td>Benefits</td><td>PAGER79 309B 79-502 _P3 DFHAP0001 CICSCN AN ABEND CODE 0C4/ASRA HAS OCCURRED IN TRANSACTION KHI1 PROGRAM GH20KHI101</td></tr>
+
+<tr><td class="seq">3</td><td>09:01:47</td><td>INC2195003</td><td><span class="pill high">high</span></td><td><span class="tag tag-asra">ASRA</span></td><td>Benefits</td><td>PAGER79 309B 79-503 _P3 DFHAP0001 CICSCN AN ABEND CODE 0C9/ASRA HAS OCCURRED IN TRANSACTION LK2D PROGRAM GH20LK2D01</td></tr>
+
+<tr><td class="seq">4</td><td>09:02:30</td><td>INC2195004</td><td><span class="pill high">high</span></td><td><span class="tag tag-asra">ASRA</span></td><td>Benefits</td><td>PAGER79 309B 79-504 _P3 DFHAP0001 CICSCN AN ABEND CODE 0C1/ASRA HAS OCCURRED IN TRANSACTION R05P PROGRAM GH20R05P01</td></tr>
+
+<tr><td class="seq">5</td><td>09:03:20</td><td>INC2195005</td><td><span class="pill low">low</span></td><td><span class="tag tag-rlel">RLEL</span></td><td>Benefits</td><td>PAGER79 309B 79-601 _P3 DFHAC2206 CICSCN SOFT RLEL WARNING — TRANSACTION RDLU AT 78% OF RESOURCE LIMIT, PROGRAM GH20RDLU02</td></tr>
+
+<tr><td class="seq">6</td><td>09:04:10</td><td>INC2195006</td><td><span class="pill medium">medium</span></td><td><span class="tag tag-rlel">RLEL</span></td><td>Benefits</td><td>PAGER79 309B 79-602 _P3 DFHAC2206 CICSCN TRANSACTION WAIT ABEND RLEL — RUNAWAY TASK, ELAPSED TIME LIMIT EXCEEDED, PROGRAM GH20WAIT01</td></tr>
+
+<tr><td class="seq">7</td><td>09:04:55</td><td>INC2195007</td><td><span class="pill high">high</span></td><td><span class="tag tag-rlel">RLEL</span></td><td>Benefits</td><td>PAGER79 309B 79-604 _P3 DFHAC2206 CICSCN TRANSACTION TFIX ABEND RLEL — VSAM FILE CONTROL ENQUEUE WAIT EXCEEDED, PROGRAM GH21TFIX01</td></tr>
+
+<tr><td class="seq">8</td><td>09:05:30</td><td>INC2195008</td><td><span class="pill high">high</span></td><td><span class="tag tag-rlel">RLEL</span></td><td>Benefits</td><td>PAGER79 309B 79-605 _P3 DFHAC2206 CICSCN TRANSACTION DEBP ABEND RLEL — MQ GET WAIT EXCEEDED THRESHOLD, PROGRAM GH21DEBP01</td></tr>
+
+<tr><td class="seq">9</td><td>09:06:05</td><td>INC2195009</td><td><span class="pill crit">crit</span></td><td><span class="tag tag-rlel">RLEL</span></td><td>Benefits</td><td>PAGER79 309B CICSCN MAY BE DOWN, PLEASE CHECK — MULTIPLE RLEL TRANSACTIONS SUSPENDED</td></tr>
+
+<tr><td class="seq">10</td><td>09:06:50</td><td>INC2195010</td><td><span class="pill medium">medium</span></td><td><span class="tag tag-ecl">ECLAIMS</span></td><td>Automation</td><td>EClaims health score is MEDIUM — average response time trending above baseline following Ben CICSCN RLEL cluster</td></tr>
+
+<tr><td class="seq">11</td><td>09:07:35</td><td>INC2195011</td><td><span class="pill high">high</span></td><td><span class="tag tag-ecl">ECLAIMS</span></td><td>Automation</td><td>SAXParseException is greater than 40 — inbound claims XML parse failures rising as Ben dependency slows downstream processing</td></tr>
+
+<tr><td class="seq">12</td><td>09:08:15</td><td>INC2195012</td><td><span class="pill high">high</span></td><td><span class="tag tag-ecl">ECLAIMS</span></td><td>Automation</td><td>SAXParseException is greater than 40 — parse failure count continuing to climb, claims intake queue growing</td></tr>
+
+<tr><td class="seq">13</td><td>09:09:00</td><td>INC2195013</td><td><span class="pill crit">crit</span></td><td><span class="tag tag-ecl">ECLAIMS</span></td><td>Automation</td><td>EClaims health score is CRITICAL — average response time exceeds SLA threshold, claims submission queue backing up</td></tr>
+
+<tr><td class="seq">14</td><td>09:09:45</td><td>INC2195014</td><td><span class="pill medium">medium</span></td><td><span class="tag tag-debs">DEBS</span></td><td>Data Entry Benefits System</td><td>DEBS - Middleware - MESH showing Medium on Glass table — downstream data-entry feed queuing behind the Ben/EClaims slowdown</td></tr>
+
+<tr><td class="seq">15</td><td>09:10:30</td><td>INC2195015</td><td><span class="pill high">high</span></td><td><span class="tag tag-debs">DEBS</span></td><td>Data Entry Benefits System</td><td>DEBS - Middleware - MESH showing High on Glass table — message backlog continuing to grow, benefits data entry delayed</td></tr>
+
+<tr><td class="seq">16</td><td>09:11:10</td><td>INC2195016</td><td><span class="pill crit">crit</span></td><td><span class="tag tag-debs">DEBS</span></td><td>Data Entry Benefits System</td><td>DEBS - Middleware - MESH showing Critical on Glass table — backlog threshold breached, benefits data entry SLA at risk</td></tr>
+
+<tr class="comp-row"><td class="seq">17</td><td>09:12:00</td><td><b>INC2195020</b></td><td><span class="pill crit">crit</span></td><td><span class="tag tag-comp">COMPOSITE</span></td><td>Benefits + Automation + DeBS</td><td><b>DEPENDENCY-CHAIN ALERT — CICSCN ASRA/RLEL CLUSTER (BEN) CORRELATED TO ECLAIMS SLA BREACH AND DEBS MESH BACKLOG — 3 APPLICATIONS, 12-MIN SPAN, INVESTIGATE AS SINGLE INCIDENT</b></td></tr>
+
+</tbody></table>
+
+<h2>Cascade Logic — Why Each Stage Triggers the Next</h2>
+<table><thead><tr><th>Seq #</th><th>Stage</th><th>Trigger Logic</th></tr></thead>
+<tbody>
+<tr><td>1–4</td><td>ASRA (Ben)</td><td>Cluster of 4 data/storage-exception abends on CICSCN within 2.5 minutes — crosses velocity watch threshold (vertical, transaction layer)</td></tr>
+<tr><td>5</td><td>RLEL soft warning</td><td>Early lead-indicator (78% of resource limit) — fires before any hard abend, the proactive detection window (vertical, resource layer)</td></tr>
+<tr><td>6–9</td><td>RLEL hard + region risk</td><td>3 hard RLEL abends (loop, VSAM wait, MQ wait) escalate to a region-down alert on CICSCN (vertical, region layer)</td></tr>
+<tr><td>10–13</td><td>EClaims cascade</td><td>Downstream dependency on Ben slows EClaims response time, causing parse failures and an SLA breach (horizontal, app-to-app)</td></tr>
+<tr><td>14–16</td><td>DeBS cascade</td><td>EClaims backlog propagates further downstream into the DeBS middleware queue (MESH), climbing Medium→High→Critical (horizontal, app-to-app)</td></tr>
+<tr><td>17</td><td>Composite</td><td>All 16 alerts across 3 applications in a 12-min window are stitched into one dependency-chain incident (horizontal + vertical combined)</td></tr>
+</tbody></table>
+
+</div>
+
+<!-- ============ TAB 2 ============ -->
+<div class="tabpanel" id="tab1">
+
+<div class="kb-head">
+ <div class="kbid">KB0021950 &nbsp;|&nbsp; Related Incident: INC2195020 / MIM2195020 &nbsp;|&nbsp; Priority: P1</div>
+ <h3>CICS CICSCN Region Degradation (VSAM Lock/Infra Contention) Cascading to EClaims &amp; DeBS — Response &amp; Troubleshooting Guide</h3>
+</div>
+
+<div class="action-card">
+ <div class="step">
+  <div class="num">1</div>
+  <div class="txt"><b>Open a Bridge Call immediately.</b> Because this alert spans 3 applications (Benefits/CICSCN, EClaims, DeBS) within a 12-minute window, do not troubleshoot in silo — page CICS Systems Programming, EClaims Application Support, and DeBS Middleware support onto a single bridge.</div>
+ </div>
+ <div class="step">
+  <div class="num">2</div>
+  <div class="txt"><b>Open a MIM (Major Incident Management) record</b> against the composite alert <code>INC2195020</code>. Classify as Major Incident given the confirmed cross-application dependency-chain impact and SLA risk on EClaims/DeBS. Use MIM to drive single-thread ownership, status broadcast, and stakeholder communication until resolved.</div>
+ </div>
+ <div class="step">
+  <div class="num">3</div>
+  <div class="txt"><b>Assign a single Incident Commander</b> from the bridge to coordinate the vertical (CICS region recovery) and horizontal (EClaims/DeBS backlog clearance) workstreams in parallel, not sequentially.</div>
+ </div>
+</div>
+
+<h3>Root Cause &amp; Resolution — Two Possible Options (per log evidence)</h3>
+<p style="font-size:12px;color:var(--dim);margin-top:-6px">The log signature in Tab ③ supports two plausible root-cause paths. Both must be investigated in parallel on the bridge until one is confirmed and the other is ruled out.</p>
+
+<div class="opt-wrap">
+
+ <div class="opt-card a">
+  <span class="opt-label">Option A &middot; Data / Lock Contention (Application-Layer)</span>
+  <h4>Root Cause: Bad/oversized data record held an abnormal VSAM record lock, blocking dependent transactions</h4>
+  <div class="log-cite">Supporting log evidence: <code>DFHAP0001 ... 0C7/ASRA ... TRANSACTION DEPR</code> and <code>0C9/ASRA ... LK2D</code> (data exceptions) immediately followed by <code>DFHAC2206 ... TRAN=TFIX ... RESOURCE=ENQUEUE WAIT_TYPE=FCDSRECD</code> (record-lock wait) &mdash; the ENQUEUE wait type specifically indicates another task is holding a VSAM record lock.</div>
+  <p>The ASRA cluster on DEPR/KHI1/LK2D/R05P is consistent with programs reading a shared VSAM file that received a malformed or oversized record. The transaction that read/updated the bad record did not release its lock cleanly, causing TFIX to queue on ENQUEUE (FCDSRECD) until it breached the RLEL elapsed-time limit.</p>
+  <ol class="opt-steps">
+   <li>Pull the CICS transaction dump for DEPR/KHI1/LK2D via CEDF or Abend-AID; identify the exact record key/offset that triggered 0C7/0C9.</li>
+   <li>Run VSAM file control statistics (CEMT INQUIRE FILE / SYSVIEW) to find which task is holding the lock referenced in the FCDSRECD ENQUEUE wait on TFIX.</li>
+   <li>Force-cancel or back out the lock-holding transaction (with DBA sign-off) to release the record lock.</li>
+   <li>Validate the offending data record with the upstream data owner; correct or quarantine it to prevent recurrence.</li>
+   <li>Restart TFIX/DEBP once the lock clears; confirm RLEL rate returns to baseline in OMEGAMON.</li>
+   <li>Monitor EClaims response time and DeBS MESH queue depth for drain-down (15&ndash;20 min) once Ben is confirmed stable.</li>
+  </ol>
+ </div>
+
+ <div class="opt-card b">
+  <span class="opt-label">Option B &middot; Infrastructure Contention (Storage/MQ Layer)</span>
+  <h4>Root Cause: Underlying DASD/storage or MQ subsystem degradation causing elevated I/O and queue wait times across multiple unrelated transactions</h4>
+  <div class="log-cite">Supporting log evidence: multiple <b>different</b> transactions (DEPR, KHI1, LK2D, R05P, WAIT, TFIX, DEBP) all failing/waiting within a 5-minute window, including an <code>MQGET</code> wait on DEBP (<code>QUEUE=DEBP.TRIGGER.Q WAIT=00:00:29.9</code>) &mdash; a spread this wide across unrelated programs points to a shared infrastructure resource rather than one bad transaction.</div>
+  <p>Rather than one bad record, a shared storage volume or MQ subsystem serving the CICSCN region may be degraded (slow I/O response, DASD contention, or MQ channel/queue manager issue), causing storage-access exceptions (surfacing as ASRA) and independent resource waits (surfacing as RLEL) across multiple transactions simultaneously.</p>
+  <ol class="opt-steps">
+   <li>Engage z/OS Storage/DASD team to pull I/O response-time metrics for the volumes hosting Ben's VSAM datasets during 09:00&ndash;09:06.</li>
+   <li>Check MQ queue manager health and channel status for <code>DEBP.TRIGGER.Q</code>; confirm CurrentQDepth trend and any MQ subsystem alerts in the same window.</li>
+   <li>Cross-check SMF/RMF I/O response-time records for the same LPAR to rule out a broader storage-subsystem event affecting other regions.</li>
+   <li>If storage/MQ degradation is confirmed, engage the infrastructure team for failover or remediation (e.g., DASD mirror switch, MQ channel restart) rather than an application-level fix.</li>
+   <li>Once infrastructure is stabilized, confirm CICSCN task dispatch/suspend times normalize in OMEGAMON before closing the CICS-side workstream.</li>
+   <li>Monitor EClaims and DeBS independently for recovery, since an infrastructure-layer fix may not immediately clear application-level backlogs (queue drain may lag).</li>
+  </ol>
+ </div>
+
+</div>
+
+<h3>Common Bridge Actions (apply regardless of confirmed option)</h3>
+<div class="ts-list">
+ <div class="ts-item"><div class="ts-num">1</div><div>Confirm CICSCN region status via CEMT/CICSPlex SM; if "MAY BE DOWN," check whether automated recovery (KB0020326) is already in progress before manual intervention.</div></div>
+ <div class="ts-item"><div class="ts-num">2</div><div>On EClaims: pull the application log around the SAXParseException spike to confirm whether malformed/truncated XML payloads correlate with Ben's slowdown timestamps.</div></div>
+ <div class="ts-item"><div class="ts-num">3</div><div>On DeBS: check the MESH middleware glass-table queue depth and consumer lag to confirm the backlog is downstream of EClaims/Ben and not an independent DeBS-side failure.</div></div>
+ <div class="ts-item"><div class="ts-num">4</div><div>Close the MIM only after all 3 applications (Benefits, EClaims, DeBS) independently report green/healthy status — do not close on CICS recovery alone.</div></div>
+</div>
+
+<h3>Historical Incidents — Detailed Root Cause Analysis &amp; Actions Taken</h3>
+
+<div class="rag-callout">
+ <b>RAG / Knowledge-Retrieval Note:</b> Each historical record below follows a fixed schema &mdash; Symptom, Investigation Timeline, Confirmed Root Cause, Corrective Actions (step-by-step), Verification, and MTTR &mdash; so that a retrieval-augmented resolution engine can match new incidents against structured fields (log signature, wait-type, resource name) rather than free-text alone, and surface the correct historical action sequence with confidence.
+</div>
+
+<div class="hist-card">
+ <div class="hist-banner">
+  <div class="hist-top">
+   <div class="hist-id">INC2114132 <span class="p1-tag" style="margin-left:6px">P1</span></div>
+   <div class="hist-date">Opened: 2026-05-11 04:10 &nbsp;|&nbsp; Resolved: 2026-05-11 05:42</div>
+  </div>
+  <div class="hist-meta">
+   <span><b>Application:</b> Benefits (Ben) / CICSCN</span>
+   <span><b>Transaction:</b> KHI1</span>
+   <span><b>Program:</b> GH20KHI101</span>
+   <span><b>File:</b> KHI1MSTR</span>
+   <span><b>Child Alerts:</b> 6</span>
+   <span><b>Root Cause Match:</b> <span class="rc-tag-a">Option A &mdash; Data/Lock Contention</span></span>
+  </div>
+ </div>
+ <div class="hist-body">
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">S</span>Symptom</div>
+   <div class="rca-text">CICS transaction <b>KHI1</b> (program <b>GH20KHI101</b>) abended 6 times in a 50-minute window on region CICSCN, each occurrence logged as <code>PAGER79 309B GH20KHI1 ABENDED</code>. Auto-restart triggered after each abend but the transaction failed identically every time against file <b>KHI1MSTR</b>, indicating a persistent condition rather than a transient blip.</div>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">I</span>Investigation Timeline (step-by-step)</div>
+   <ol class="rca-steps invest">
+    <li><b>04:12</b> &mdash; On-call engineer paged on 1st abend; pulled CICS transaction dump via Abend-AID for program <b>GH20KHI101</b>, file <b>KHI1MSTR</b>.</li>
+    <li><b>04:20</b> &mdash; Dump analysis showed abend code <b>0C7 (Data Exception)</b> in program <b>GH20KHI101</b> against file <b>KHI1MSTR</b>, pointing to an invalid/corrupted data field encountered during a VSAM READ-FOR-UPDATE on that file.</li>
+    <li><b>04:28</b> &mdash; Cross-checked CICS File Control statistics (CEMT INQUIRE FILE) for file <b>KHI1MSTR</b>; found an outstanding record lock (ENQUEUE, resource FCDSRECD) held by a separate batch program (<b>GH20KHI1B</b>) against the same file <b>KHI1MSTR</b>, not released after an earlier abnormal termination.</li>
+    <li><b>04:35</b> &mdash; Confirmed via SMF Type 30 records that batch program <b>GH20KHI1B</b> abended 40 minutes earlier on file <b>KHI1MSTR</b> (<b>S0C7 &mdash; Data Exception</b>) and left its unit-of-work unresolved, holding the VSAM lock indefinitely.</li>
+    <li><b>04:41</b> &mdash; Engaged DBA to confirm the specific record key in file <b>KHI1MSTR</b>; identified a corrupted/oversized data field causing the original S0C7 in program <b>GH20KHI1B</b>, which then propagated the identical 0C7 data exception to the online transaction (program <b>GH20KHI101</b>) attempting to access the same record.</li>
+   </ol>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">R</span>Confirmed Root Cause</div>
+   <div class="rca-text">Batch program <b>GH20KHI1B</b> abended earlier on a data exception (<b>S0C7</b>) while updating file <b>KHI1MSTR</b>, and because the abend occurred mid-transaction, the record lock was never released. The online transaction <b>KHI1</b> (program <b>GH20KHI101</b>) repeatedly attempted to read/update the same locked record in <b>KHI1MSTR</b>, encountering the same corrupted data field and abending with <b>0C7 (Data Exception)</b> each time it was auto-restarted &mdash; a classic <b>orphaned VSAM lock from an incomplete batch unit-of-work, compounded by a shared data-quality defect</b>.</div>
+   <div class="log-evidence">DFHAP0001 CICSCN AN ABEND CODE <span class="hl">0C7</span>/ASRA HAS OCCURRED IN TRANSACTION KHI1 PROGRAM <span class="hl">GH20KHI101</span> FILE=<span class="hl">KHI1MSTR</span><br>SMF30 JOB=<span class="hl">GH20KHI1B</span> FILE=<span class="hl">KHI1MSTR</span> ABEND=<span class="hl">S0C7</span> U0000 &mdash; unit-of-work not backed out<br>CEMT INQUIRE FILE(<span class="hl">KHI1MSTR</span>) ENQUEUE HELD BY JOB=GH20KHI1B RESOURCE=FCDSRECD KEY=0041207765</div>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">A</span>Corrective Actions Taken (step-by-step)</div>
+   <ol class="rca-steps action">
+    <li><b>04:45</b> &mdash; Issued CICS <code>CEMT SET TASK(nnnn) FORCEPURGE</code> against the orphaned unit-of-work (program GH20KHI1B) holding the lock on file KHI1MSTR (approved by Shift Lead per emergency change process).</li>
+    <li><b>04:52</b> &mdash; Confirmed VSAM record lock released via CEMT INQUIRE FILE(KHI1MSTR); ENQUEUE resource cleared.</li>
+    <li><b>04:58</b> &mdash; Restarted transaction KHI1 (program GH20KHI101) manually; transaction completed successfully on first attempt against file KHI1MSTR.</li>
+    <li><b>05:05</b> &mdash; DBA corrected the malformed source record in file KHI1MSTR (oversized field truncated per data standard) to prevent program GH20KHI1B from re-abending on rerun.</li>
+    <li><b>05:15</b> &mdash; Reran batch program GH20KHI1B from the point of failure; completed clean with no further abends against file KHI1MSTR.</li>
+    <li><b>05:30</b> &mdash; Monitored CICSCN region for 12 minutes; no further KHI1/GH20KHI101 abends observed, transaction rate returned to baseline.</li>
+    <li><b>05:42</b> &mdash; Incident resolved and closed; problem record raised to add upstream data validation preventing oversized field from reaching program GH20KHI1B / file KHI1MSTR.</li>
+   </ol>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">V</span>Verification / Closure Criteria</div>
+   <div class="rca-text">KHI1 (GH20KHI101) transaction rate and response time normalized for &ge;30 minutes post-fix; no recurrence of 0C7 abend on file KHI1MSTR; DBA confirmed source record corrected; problem ticket opened for permanent upstream data-validation fix on program GH20KHI1B.</div>
+  </div>
+
+  <div class="mttr-strip">
+   <div class="mttr-cell"><div class="v">33 min</div><div class="l">Time to Root Cause</div></div>
+   <div class="mttr-cell"><div class="v">57 min</div><div class="l">Time to Resolve</div></div>
+   <div class="mttr-cell"><div class="v">92 min</div><div class="l">Total MTTR</div></div>
+   <div class="mttr-cell"><div class="v">No</div><div class="l">Code Change Required</div></div>
+  </div>
+
+ </div>
+</div>
+
+<div class="hist-card">
+ <div class="hist-banner">
+  <div class="hist-top">
+   <div class="hist-id">INC2137442 <span class="p1-tag" style="margin-left:6px">P1</span></div>
+   <div class="hist-date">Opened: 2026-05-29 00:10 &nbsp;|&nbsp; Resolved: 2026-05-29 02:05</div>
+  </div>
+  <div class="hist-meta">
+   <span><b>Application:</b> Benefits (Ben) / CICSCN</span>
+   <span><b>Transaction:</b> Multiple (region-wide)</span>
+   <span><b>File/Volume:</b> BENVOL03 (VSAM volume group)</span>
+   <span><b>Child Alerts:</b> 5</span>
+   <span><b>Root Cause Match:</b> <span class="rc-tag-b">Option B &mdash; Infrastructure Contention</span></span>
+  </div>
+ </div>
+ <div class="hist-body">
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">S</span>Symptom</div>
+   <div class="rca-text">CICSCN region reported <code>_P2 CICSCN S/B DOWN - INVESTIGATE - KB0020326</code>, immediately followed within 5 minutes by an <code>ABEND=S222</code> region cancel, a <code>MATE9000 BEN CLOSED?</code> alert, a region recovery message (<code>CP021/01 - RECOVERY COMPLETE</code>), and an unrelated <code>CICSEODC IS STILL POSTABLE IN CA7</code> alert &mdash; multiple, functionally unrelated transactions/subsystems affected simultaneously rather than one bad transaction or program.</div>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">I</span>Investigation Timeline (step-by-step)</div>
+   <ol class="rca-steps invest">
+    <li><b>00:12</b> &mdash; On-call engineer checked CICSPlex SM; region CICSCN showed degraded dispatch times across ALL active transactions, not isolated to one program.</li>
+    <li><b>00:18</b> &mdash; Pulled OMEGAMON Region Status panel; CPU dispatch time was normal but I/O wait time was elevated 4x baseline across every VSAM-dependent transaction in the region.</li>
+    <li><b>00:24</b> &mdash; Engaged z/OS Storage team; RMF Monitor III showed elevated DASD response time on volume group <b>BENVOL03</b> hosting Ben's VSAM datasets (avg. response time 45ms vs. 6ms baseline).</li>
+    <li><b>00:30</b> &mdash; Storage team confirmed a failing/degraded path on one DASD controller serving volume <b>BENVOL03</b>, causing intermittent I/O retries across all datasets on that volume group.</li>
+    <li><b>00:38</b> &mdash; Because the region could not clear its I/O backlog against BENVOL03, CICS's own health-check logic triggered the "S/B DOWN" alert and an automated recycle (ABEND=S222) was issued by System Automation to attempt self-recovery.</li>
+    <li><b>00:45</b> &mdash; Confirmed via CA7 scheduler log that <code>CICSEODC</code> batch dependency was unrelated to the storage issue &mdash; it was a separate downstream scheduling alert triggered because the CICS recycle delayed the EOD batch window.</li>
+   </ol>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">R</span>Confirmed Root Cause</div>
+   <div class="rca-text">A <b>degraded path on a DASD storage controller</b> serving volume group <b>BENVOL03</b> (hosting Ben's VSAM datasets) caused elevated I/O response times across the entire CICSCN region. This was <b>not</b> a single bad transaction or data record &mdash; it was infrastructure-layer storage contention that affected every VSAM-dependent transaction simultaneously, which is why CICS's automated health-check triggered a region recycle (S222) rather than a single-transaction abend.</div>
+   <div class="log-evidence">RMF Monitor III: DASD_RESP_TIME volume=<span class="hl">BENVOL03</span> avg=<span class="hl">45ms</span> (baseline=6ms), path_retry_count=312/min<br>IEF450I CICSCN PRODCN - <span class="hl">ABEND=S222</span> U0000 REASON=00000000 (automation-triggered recycle)</div>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">A</span>Corrective Actions Taken (step-by-step)</div>
+   <ol class="rca-steps action">
+    <li><b>00:48</b> &mdash; Storage team performed a manual path failover, routing I/O for volume group BENVOL03 away from the degraded DASD controller path.</li>
+    <li><b>00:55</b> &mdash; Confirmed DASD response time on BENVOL03 returned to baseline (6&ndash;8ms) immediately after path failover.</li>
+    <li><b>01:05</b> &mdash; Allowed the automated CICS region recovery (already in progress per KB0020326) to complete rather than forcing a manual restart, since the underlying I/O cause was now resolved.</li>
+    <li><b>01:20</b> &mdash; Confirmed <code>CP021/01 - RECOVERY COMPLETE</code> message; region back online, transaction dispatch times normal.</li>
+    <li><b>01:35</b> &mdash; Coordinated with CA7 scheduling team to manually kick off the delayed <code>CICSEODC</code> batch window once the region was confirmed stable.</li>
+    <li><b>01:55</b> &mdash; Monitored region for 20 minutes; no further I/O-related abends or dispatch delays observed on BENVOL03.</li>
+    <li><b>02:05</b> &mdash; Incident resolved and closed; hardware vendor engaged separately for permanent DASD controller path repair on BENVOL03 (tracked under a linked infrastructure change).</li>
+   </ol>
+  </div>
+
+  <div class="rca-section">
+   <div class="rca-label"><span class="ico">V</span>Verification / Closure Criteria</div>
+   <div class="rca-text">DASD response time on BENVOL03 confirmed at baseline for &ge;20 minutes; CICS region dispatch/suspend times normal across all transactions; CA7 EOD batch window confirmed caught up; no further S222 recycles or region health-check alerts in following 4 hours.</div>
+  </div>
+
+  <div class="mttr-strip">
+   <div class="mttr-cell"><div class="v">38 min</div><div class="l">Time to Root Cause</div></div>
+   <div class="mttr-cell"><div class="v">77 min</div><div class="l">Time to Resolve</div></div>
+   <div class="mttr-cell"><div class="v">115 min</div><div class="l">Total MTTR</div></div>
+   <div class="mttr-cell"><div class="v">Infra Only</div><div class="l">Fix Type</div></div>
+  </div>
+
+ </div>
+</div>
+
+<div class="rag-callout">
+ <b>How this maps to the current incident:</b> The active sequence shows signatures consistent with <b>both</b> historical patterns &mdash; the ASRA data-exception cluster (DEPR/KHI1/LK2D/R05P) resembles <code>INC2114132</code>'s orphaned-lock signature (file KHI1MSTR, program GH20KHI101/GH20KHI1B), while the multi-transaction RLEL spread with an MQGET wait resembles <code>INC2137442</code>'s infrastructure-contention signature (volume BENVOL03). Bridge investigation should test the <b>Option A hypothesis first</b> (faster to confirm/rule out via CEMT lock inspection) before escalating to the <b>Option B</b> storage/MQ infrastructure path, unless RMF/DASD metrics already show elevated response times at incident start.
+</div>
+
+</div>
+
+<!-- ============ TAB 3 ============ -->
+<div class="tabpanel" id="tab2">
+
+<h3>All Possible Logs for This Incident — by Source</h3>
+<p style="font-size:12px;color:var(--dim);margin-top:-6px">Sample/illustrative log excerpts only — formats mirror the real system's known message IDs (DFHAP0001, DFHAC2206, IEF450I, OMEGAMON exception, MQ, SAXParser, MESH).</p>
+
+<div class="log-block">
+ <div class="log-head"><span>CICS Region Log — ASRA Abend</span><span class="src">Source: CICS JES SYSLOG / DFHLOG (region CICSCN)</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:00:12.114</span> <span class="lvl-crit">DFHAP0001</span> CICSCN AN ABEND CODE <span class="hl">0C7/ASRA</span> HAS OCCURRED IN TRANSACTION <span class="hl">DEPR</span> PROGRAM GH21DEPR01 TASK 0004821
+<span class="ts">2026-08-09 09:00:12.118</span> DFHSR0001 CICSCN A DUMP HAS BEEN TAKEN AS REQUESTED, DUMPCODE=<span class="hl">ASRA</span> TASK 0004821
+<span class="ts">2026-08-09 09:01:05.221</span> <span class="lvl-crit">DFHAP0001</span> CICSCN AN ABEND CODE <span class="hl">0C4/ASRA</span> HAS OCCURRED IN TRANSACTION <span class="hl">KHI1</span> PROGRAM GH20KHI101 FILE=<span class="hl">KHI1MSTR</span> TASK 0004833
+<span class="ts">2026-08-09 09:01:47.005</span> <span class="lvl-crit">DFHAP0001</span> CICSCN AN ABEND CODE <span class="hl">0C9/ASRA</span> HAS OCCURRED IN TRANSACTION <span class="hl">LK2D</span> PROGRAM GH20LK2D01 TASK 0004840</div>
+</div>
+
+<div class="log-block">
+ <div class="log-head"><span>OMEGAMON / SYSVIEW — RLEL Soft Threshold &amp; Resource Limiting</span><span class="src">Source: OMEGAMON AI for CICS — Resource Limiting exception feed</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:03:20.500</span> <span class="lvl-warn">DFHAC2206</span> CICSCN SOFT RLEL WARNING TRAN=<span class="hl">RDLU</span> ELAPSED=00:00:23.4 LIMIT=00:00:30.0 (<span class="hl">78%</span>) PROGRAM=GH20RDLU02
+<span class="ts">2026-08-09 09:04:10.812</span> <span class="lvl-crit">DFHAC2206</span> CICSCN TRAN=<span class="hl">WAIT</span> ABEND=RLEL ELAPSED=00:00:30.1 REASON=RUNAWAY_TASK PROGRAM=GH20WAIT01
+<span class="ts">2026-08-09 09:04:55.330</span> <span class="lvl-crit">DFHAC2206</span> CICSCN TRAN=<span class="hl">TFIX</span> ABEND=RLEL RESOURCE=ENQUEUE WAIT_TYPE=FCDSRECD ELAPSED=00:00:31.7 PROGRAM=GH21TFIX01
+<span class="ts">2026-08-09 09:05:30.117</span> <span class="lvl-crit">DFHAC2206</span> CICSCN TRAN=<span class="hl">DEBP</span> ABEND=RLEL RESOURCE=MQGET QUEUE=DEBP.TRIGGER.Q WAIT=00:00:29.9 PROGRAM=GH21DEBP01</div>
+</div>
+
+<div class="log-block">
+ <div class="log-head"><span>z/OS Job Step Log — Region Availability</span><span class="src">Source: z/OS SYSLOG (IEF450I) / CICSPlex SM</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:06:05.000</span> <span class="lvl-crit">PAGER79 309B</span> CICSCN MAY BE DOWN, PLEASE CHECK — MULTIPLE RLEL TRANSACTIONS SUSPENDED
+<span class="ts">2026-08-09 09:06:05.041</span> IEF450I CICSCN PRODCN - ABEND=<span class="hl">S222</span> U0000 REASON=00000000
+<span class="ts">2026-08-09 09:14:30.220</span> <span class="lvl-info">PAGER79 309B</span> CICSCN CP021/01 - RECOVERY COMPLETE</div>
+</div>
+
+<div class="log-block">
+ <div class="log-head"><span>EClaims Application Log — Response Time &amp; Parse Errors</span><span class="src">Source: Dynatrace APM trace / EClaims application server log (log4j)</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:06:50.442</span> [<span class="lvl-warn">WARN </span>] EClaimsHealthMonitor - health score transitioned GREEN -&gt; <span class="hl">MEDIUM</span>; avg_response_time_ms=2140 (baseline=850)
+<span class="ts">2026-08-09 09:07:35.108</span> [<span class="lvl-crit">ERROR</span>] ClaimsXmlParser - org.xml.sax.<span class="hl">SAXParseException</span>: premature end of file; payload truncated at byte 4096 (upstream timeout suspected)
+<span class="ts">2026-08-09 09:08:15.960</span> [<span class="lvl-crit">ERROR</span>] ClaimsXmlParser - <span class="hl">SAXParseException</span> count = 47 in rolling 5-min window (threshold: 40)
+<span class="ts">2026-08-09 09:09:00.333</span> [<span class="lvl-crit">ERROR</span>] EClaimsHealthMonitor - health score transitioned MEDIUM -&gt; <span class="hl">CRITICAL</span>; avg_response_time_ms=6890 (SLA=3000); queue_depth=812</div>
+</div>
+
+<div class="log-block">
+ <div class="log-head"><span>DeBS Middleware Log — MESH Queue Backlog</span><span class="src">Source: MESH Middleware Glass Table / Message Queue Monitor</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:09:45.700</span> [<span class="lvl-warn">MEDIUM</span>] DEBS-MESH GlassTable: queue=BEN2DEBS.INBOUND depth=1240 (baseline=300) consumer_lag=00:02:15
+<span class="ts">2026-08-09 09:10:30.415</span> [<span class="lvl-crit">HIGH  </span>] DEBS-MESH GlassTable: queue=BEN2DEBS.INBOUND depth=2870 consumer_lag=00:05:40 — backlog growing
+<span class="ts">2026-08-09 09:11:10.960</span> [<span class="lvl-crit">CRITICAL</span>] DEBS-MESH GlassTable: queue=BEN2DEBS.INBOUND depth=4415 consumer_lag=00:09:12 — SLA breach threshold exceeded</div>
+</div>
+
+<div class="log-block">
+ <div class="log-head"><span>Composite Correlation Log — Dependency-Chain Confirmation</span><span class="src">Source: ServiceNow Event Management / Correlation Engine</span></div>
+ <div class="log-body"><span class="ts">2026-08-09 09:12:00.000</span> [<span class="lvl-crit">CRIT</span>] CorrelationEngine: 16 alerts across 3 applications (Benefits, Automation/EClaims, DeBS) within 719s window
+<span class="ts">2026-08-09 09:12:00.010</span> [<span class="lvl-crit">CRIT</span>] CorrelationEngine: dependency chain confirmed BEN(CICSCN) -&gt; ECLAIMS -&gt; DEBS; generating composite parent <span class="hl">INC2195020</span>
+<span class="ts">2026-08-09 09:12:00.020</span> [<span class="lvl-info">INFO</span>] MIM: major incident record <span class="hl">MIM2195020</span> opened, bridge call initiated, KB0021950 attached</div>
+</div>
+
+</div>
+
+<footer>Prepared by Ashis Taru Mukherjee · Sample/demo data only — no live Ben, EClaims or DeBS incident records used · Confidential Internal Use</footer>
+
+<script>
+function showTab(idx, btn){
+  document.querySelectorAll('.tabpanel').forEach((p,i)=>{ p.classList.toggle('active', i===idx); });
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
+</body></html>
